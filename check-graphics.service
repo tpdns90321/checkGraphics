@@ -1,0 +1,11 @@
+[Unit]
+Description=settings for non-nvidia system or nvidia system
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/checkGraphics start
+ExecStop=/usr/bin/checkGraphics stop
+
+[Install]
+WantedBy=multi-user.target

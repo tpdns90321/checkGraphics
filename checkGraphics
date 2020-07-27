@@ -1,0 +1,38 @@
+#!/bin/sh
+
+have_nvidia_device() {
+  lspci | grep VGA | grep NVIDIA
+}
+
+stop() {
+  if [ -f /etc/X11/xorg.conf -a -f /etc/X11/xorg.conf.nvidia ]; then
+    rm /etc/X11/xorg.conf
+  fi
+}
+
+start() {
+  if have_nvidia_device ; then
+    echo "NVIDIA devices detected"
+    if [ -f /etc/X11/xorg.conf.nvidia ]; then
+      cp /etc/X11/xorg.conf{.nvidia,}
+    else
+      echo "NVIDIA xorg setting not have"
+    fi
+  else
+      echo "no External graphics"
+    stop
+  fi
+}
+
+case "$1" in
+'start')
+  start || exit 1
+  ;;
+'stop')
+  stop || exit 1
+  ;;
+*)
+  echo "$0 Usage: {start, stop}"
+  exit 1
+  ;;
+esac
