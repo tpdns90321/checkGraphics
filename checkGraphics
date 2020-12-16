@@ -10,17 +10,25 @@ stop() {
   fi
 }
 
+LAST_SURVIVOR=750
+
 start() {
   if have_nvidia_device ; then
     echo "NVIDIA devices detected"
+    echo "check NVIDIA Graphics gen"
+    if [ "$(have_nvidia_device | grep -P 'GT\w? \d+' -o | sed -E 's/GT\w? //g')" -lt $LAST_SURVIVOR ]; then
+      echo "NVIDIA Legacy: use nouveau"
+      exit 0
+    else
+      echo "NVIDIA: Latest driver"
+    fi
     if [ -f /etc/X11/xorg.conf.nvidia ]; then
       cp /etc/X11/xorg.conf{.nvidia,}
     else
       echo "NVIDIA xorg setting not have"
     fi
   else
-      echo "no External graphics"
-    stop
+    echo "no Nvidia graphics"
   fi
 }
 
