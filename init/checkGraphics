@@ -1,0 +1,12 @@
+#!/sbin/openrc-run
+
+name=$RC_SVCNAME
+description="settings for non-nvidia system or nvidia system"
+command="/usr/bin/checkGraphics"
+command_args="start"
+
+stop() {
+	ebegin "Stopping $RC_SVCNAME"
+	/usr/bin/checkGraphics stop
+	eend $?
+}
